@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mouvement d’inventaire – Centre Mécanique AGH</title>
+  <meta name="description" content="Formulaire de mouvements d’inventaire intégré (Zoho Creator)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b1220;
+      --bg-2: #0e1729;
+      --card: rgba(255,255,255,0.08);
+      --card-border: rgba(255,255,255,0.15);
+      --text: #eaf1ff;
+      --muted: #b6c3e0;
+      --accent: #6ee7ff; /* cyan */
+      --accent-2: #7c5cff; /* violet */
+      --ok: #34d399;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f5f7fb;
+        --bg-2: #f0f4ff;
+        --card: rgba(255,255,255,0.9);
+        --card-border: rgba(10,20,40,0.1);
+        --text: #0f172a;
+        --muted: #475569;
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(108,99,255,.25), transparent 60%),
+        radial-gradient(900px 500px at 95% 10%, rgba(46,213,255,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      min-height:100vh;
+      display:flex;flex-direction:column;
+    }
+
+    .wrap{
+      width:min(1200px, 94%);
+      margin: clamp(16px, 2.4vw, 32px) auto;
+    }
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding: 14px 0 22px;
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:44px;height:44px;border-radius:12px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      box-shadow: var(--shadow);
+    }
+    h1{margin:0;font-size: clamp(22px, 2.6vw, 34px);letter-spacing:.2px}
+    .sub{margin:6px 0 0;color:var(--muted);font-weight:400;font-size:clamp(13px,1.2vw,14px)}
+
+    .card{
+      position:relative;
+      background: var(--card);
+      border:1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .bar{
+      height:6px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .content{
+      padding: clamp(14px, 2.2vw, 22px);
+      display:grid;grid-template-columns:1fr;gap:16px;
+    }
+
+    .tips{
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:4px
+    }
+    .tip{
+      border:1px dashed var(--card-border);
+      padding:8px 10px;border-radius:12px;color:var(--muted);font-size:13px
+    }
+
+    .iframe-wrap{
+      position:relative;
+      border-radius: calc(var(--radius) - 4px);
+      border:1px solid var(--card-border);
+      background: rgba(0,0,0,0.15);
+      overflow:hidden;
+      min-height: 600px;
+      display:grid;
+    }
+
+    iframe{
+      width:100%;
+      height:100%;
+      min-height: 600px;
+      border:0;
+      background: transparent;
+    }
+
+    /* Loader */
+    .loader{
+      position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;
+      background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+      transition: opacity .4s ease;
+    }
+    .loader.hidden{opacity:0;visibility:hidden}
+    .spinner{
+      width:56px;height:56px;border-radius:50%;
+      border:4px solid rgba(255,255,255,.25);
+      border-top-color: var(--accent);
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 0 1px inset rgba(255,255,255,.05);
+    }
+    @keyframes spin{to{transform: rotate(360deg)}}
+
+    .foot{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      padding: 14px clamp(14px, 2.2vw, 22px) 18px; color:var(--muted);font-size:13px
+    }
+    .badge{
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--card-border);
+      padding:6px 10px;border-radius:999px;color:var(--text);font-weight:600;font-size:12px
+    }
+
+    /* Small helper bar */
+    .helper{
+      display:flex;gap:8px;align-items:center;flex-wrap:wrap
+    }
+    .helper a{color:var(--accent); text-decoration:none}
+    .helper a:hover{text-decoration:underline}
+
+    /* Responsive */
+    @media (max-width: 640px){
+      header{flex-direction:column;align-items:flex-start}
+      .foot{flex-direction:column;align-items:flex-start}
+      .iframe-wrap, iframe{min-height: 520px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Mouvements d’inventaire</h1>
+          <p class="sub">Saisissez et suivez vos entrées/sorties d’articles en quelques secondes. Le formulaire ci‑dessous est intégré depuis Zoho Creator.</p>
+        </div>
+      </div>
+      <div class="badge" title="Intégration sécurisée">Intégration Zoho Creator</div>
+    </header>
+
+    <section class="card">
+      <div class="bar" aria-hidden="true"></div>
+      <div class="content">
+        <div class="helper">
+          <span class="tip">Raccourci : <strong>Tab</strong> pour passer d’un champ à l’autre</span>
+          <span class="tip">En cas de blocage d’iframe, ouvrez <a id="openDirect" href="#" rel="noopener" target="_blank">le formulaire directement</a></span>
+        </div>
+        <div class="iframe-wrap">
+          <div class="loader" id="loader" role="status" aria-live="polite" aria-label="Chargement du formulaire">
+            <div class="spinner" aria-hidden="true"></div>
+          </div>
+          <iframe id="creatorFrame" title="Formulaire – Mouvements d’inventaire" allow="clipboard-write; encrypted-media; fullscreen" referrerpolicy="no-referrer-when-downgrade" src="https://creatorapp.zohopublic.ca/centremchaniqueaghinc/wip-conteneur/form-embed/Mouvements_d_inventaire/ZH0CqDwCzHgegRTP4Ht4Oy7VeOzmqNWQ8fQVN3CKTKq49vm2k3OVshFDtnMjdz0VHdpP6jR9Emb1P9u8bhPQsUVYBgZZYJGJH7qa"></iframe>
+        </div>
+      </div>
+      <div class="foot">
+        <div>
+          <strong>Conseil :</strong> si la page reste vide, votre navigateur ou un pare‑feu peut bloquer le chargement en iframe. Utilisez le lien « ouvrir directement » ci‑dessus.
+        </div>
+        <div class="helper">
+          <span>Besoin d’aide ?</span>
+          <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'})">Revenir en haut</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function(){
+      const iframe = document.getElementById('creatorFrame');
+      const loader = document.getElementById('loader');
+      const openDirect = document.getElementById('openDirect');
+      openDirect.href = iframe.src;
+
+      // Masquer le loader quand l'iframe signale un chargement
+      iframe.addEventListener('load', () => {
+        // Petit délai pour une transition douce
+        setTimeout(() => loader.classList.add('hidden'), 250);
+      });
+
+      // Sécurité / détection d’échec de chargement
+      // Si au bout de 8s le contenu n’est pas visible, proposer le lien direct
+      let fallbackTimer = setTimeout(() => {
+        loader.classList.remove('hidden');
+      }, 8000);
+
+      // Nettoyage si tout est ok
+      window.addEventListener('beforeunload', () => clearTimeout(fallbackTimer));
+
+      // Optionnel : auto-hauteur si Zoho poste sa taille (certaines intégrations envoient un postMessage)
+      window.addEventListener('message', (ev) => {
+        try{
+          if(!ev.data) return;
+          const d = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data;
+          if(d && (d.type === 'set-iframe-height' || d.action === 'resize') && d.height){
+            iframe.style.height = Math.max(600, parseInt(d.height,10)) + 'px';
+          }
+        }catch(e){/* ignore */}
+      });
+    })();
+  </script>
+</body>
+</html>
